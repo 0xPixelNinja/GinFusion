@@ -1,0 +1,12 @@
+# config.yaml
+
+server:
+  address: ":8080"
+
+admin:
+  address: ":8081"
+
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
