@@ -1,0 +1,24 @@
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webapp
+    ports:
+      - "8080:8080"    # API server port
+      - "8081:8081"    # Admin server port
+    environment:
+      - SERVER_ADDRESS=:8080
+      - ADMIN_ADDRESS=:8081
+      - JWT_SECRET=your_super_secret_jwt_key
+      - REDIS_ADDR=redis:6379   # Point to the Redis container
+    volumes:
+      - "C:\\API\\API\\API:/server" # Mount host directory to /server in the container
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6.2
+    container_name: redis
+    ports:
+      - "6379:6379"

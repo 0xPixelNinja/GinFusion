@@ -1,0 +1,59 @@
+package handlers
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/0xPixelNinja/GinFusion/internal/repository"
+)
+
+// ModuleSearch handles module query search using SQLite.
+// It expects a query parameter "query" for the SQL query.
+func ModuleSearch(c *gin.Context) {
+	query := c.Query("query")
+	if query == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Query parameter is required"})
+		return
+	}
+
+	rows, err := repository.GetLegacyData(query)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute query"})
+		return
+	}
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get columns"})
+		return
+	}
+
+	results := []map[string]interface{}{}
+	for rows.Next() {
+		// Create slices to hold column values.
+		columnsData := make([]interface{}, len(columns))
+		columnsPointers := make([]interface{}, len(columns))
+		for i := range columnsData {
+			columnsPointers[i] = &columnsData[i]
+		}
+
+		if err := rows.Scan(columnsPointers...); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to scan row"})
+			return
+		}
+
+		rowMap := make(map[string]interface{})
+		for i, colName := range columns {
+			val := columnsData[i]
+			if b, ok := val.([]byte); ok {
+				rowMap[colName] = string(b)
+			} else {
+				rowMap[colName] = val
+			}
+		}
+		results = append(results, rowMap)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"results": results})
+}
