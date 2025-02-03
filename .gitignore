@@ -25,3 +25,4 @@ go.work.sum
 .env
 module_handler.go
 modules_routes.go
+init_sqlite.go

@@ -24,6 +24,7 @@ func main() {
 
 	cfg := config.LoadConfig()
 	repository.InitRedis(cfg)
+	repository.InitSQLiteConnections()
 
 	gin.SetMode(gin.ReleaseMode)
 	apiRouter := gin.New()
