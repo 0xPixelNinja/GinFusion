@@ -1,0 +1,22 @@
+package routes
+
+import (
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/0xPixelNinja/GinFusion/internal/handlers"
+	"github.com/0xPixelNinja/GinFusion/internal/middleware"
+	"github.com/0xPixelNinja/GinFusion/internal/repository"	
+)
+
+// RegisterModuleRoutes sets up routes for module endpoints.
+func RegisterModuleRoutes(r *gin.Engine) {
+	// Group for module endpoints under /modules.
+	modules := r.Group("/modules")
+	// Require an API key as a query parameter.
+	modules.Use(middleware.RequireAPIKey())
+	modules.Use(middleware.RateLimitMiddlewareWithAPIKey(repository.GetRedisClient(), 20, time.Minute))
+	modules.Use(middleware.ConcurrencyLimitMiddlewareWithAPIKey(10))
+	// No JWT auth is applied here.
+	modules.GET("/search", handlers.ModuleSearch)
+}
