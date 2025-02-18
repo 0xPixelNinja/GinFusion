@@ -10,7 +10,7 @@ services:
       - JWT_SECRET=your_super_secret_jwt_key
       - REDIS_ADDR=redis:6379
     volumes:
-      - "C:\\API\\API\\API:/server" # Mount host directory to /server in the container
+      - "/home/apiserver/db:/server" # Mount host directory to /server in the container
     depends_on:
       - redis
     deploy:

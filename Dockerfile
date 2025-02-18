@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the binary with CGO enabled.
-RUN CGO_ENABLED=1 go build -o webapp ./main.go
+RUN CGO_ENABLED=1 go build -o webapp ./cmd/main.go
 
 # Final stage
 FROM alpine:latest
