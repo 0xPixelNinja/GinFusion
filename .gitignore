@@ -26,3 +26,4 @@ go.work.sum
 module_handler.go
 modules_routes.go
 init_sqlite.go
+GinFusion.rar
