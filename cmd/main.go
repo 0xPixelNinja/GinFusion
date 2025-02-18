@@ -43,22 +43,23 @@ func main() {
 	apiRouter.Use(cors_)
 	routes.RegisterAPIRoutes(apiRouter)
 	routes.RegisterModuleRoutes(apiRouter)
+	routes.RegisterAdminRoutes(apiRouter)
 
 	// Create the Admin router.
-	adminRouter := gin.New()
-	adminRouter.Use(gin.Recovery(), logger.GinLogger())
-	adminRouter.Use(cors_)
-	routes.RegisterAdminRoutes(adminRouter)
+	// adminRouter := gin.New()
+	// adminRouter.Use(gin.Recovery(), logger.GinLogger())
+	// adminRouter.Use(cors_)
+	// routes.RegisterAdminRoutes(adminRouter)
 
 	// Define HTTP servers for API and Admin.
 	apiServer := &http.Server{
 		Addr:    cfg.Server.Address,
 		Handler: apiRouter,
 	}
-	adminServer := &http.Server{
-		Addr:    cfg.Admin.Address,
-		Handler: adminRouter,
-	}
+	// adminServer := &http.Server{
+	// 	Addr:    cfg.Admin.Address,
+	// 	Handler: adminRouter,
+	// }
 
 	// Start the API server in a new goroutine.
 	go func() {
@@ -68,12 +69,12 @@ func main() {
 		}
 	}()
 
-	go func() {
-		log.Printf("Starting Admin server on %s", cfg.Admin.Address)
-		if err := adminServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Admin server failed: %v", err)
-		}
-	}()
+	// go func() {
+	// 	log.Printf("Starting Admin server on %s", cfg.Admin.Address)
+	// 	if err := adminServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+	// 		log.Fatalf("Admin server failed: %v", err)
+	// 	}
+	// }()
 
 	// Wait for OS interrupt signal to gracefully shutdown servers.
 	quit := make(chan os.Signal, 1)
@@ -88,9 +89,9 @@ func main() {
 	if err := apiServer.Shutdown(ctx); err != nil {
 		log.Fatalf("API Server forced to shutdown: %v", err)
 	}
-	if err := adminServer.Shutdown(ctx); err != nil {
-		log.Fatalf("Admin Server forced to shutdown: %v", err)
-	}
+	// if err := adminServer.Shutdown(ctx); err != nil {
+	// 	log.Fatalf("Admin Server forced to shutdown: %v", err)
+	// }
 
 	log.Println("Servers exited gracefully")
 }
