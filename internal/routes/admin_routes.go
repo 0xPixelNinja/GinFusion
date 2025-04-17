@@ -9,7 +9,7 @@ import (
 // These endpoints allow administrators to manage users, API keys, and view usage statistics.
 func RegisterAdminRoutes(r *gin.Engine) {
 
-	admin_ := r.Group("/admin")
+	admin_ := r.Group("/3MXifYM5aBMYDrALLzznwAgVFaLxImdagr04qoTMsf82SPgXd2l3crRHeahjkFqS")
 
 	admin_.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "Admin is healthy"})

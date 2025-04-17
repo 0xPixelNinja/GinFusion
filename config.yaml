@@ -1,16 +1,14 @@
 # config.yaml
+# Default values - Environment variables loaded via Viper (e.g., SERVER_ADDRESS, REDIS_ADDR, JWT_SECRET) will override these.
 
 server:
-  address: ":8080"
-
-admin:
-  address: ":8081"
+  address: ":8080" # Default if SERVER_ADDRESS env var is not set
 
 redis:
-  addr: "redis:6379"
-  password: ""
-  db: 0
-  
+  addr: "localhost:6379" # Default if REDIS_ADDR env var is not set
+  password: ""           # Default if REDIS_PASSWORD env var is not set
+  db: 0                  # Default if REDIS_DB env var is not set
+
 jwt:
-  secret: "your_jwt_secret_key"
-  expiration: 3600  # seconds
+  secret: "default_secret_please_override_via_JWT_SECRET_env_var" # Default if JWT_SECRET env var is not set
+  expiration: 3600       # Default if JWT_EXPIRATION env var is not set (in seconds)
